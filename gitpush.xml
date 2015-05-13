@@ -1,0 +1,1285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ConnectConfig xmlns="http://www.example.org/ConnectConfig2">
+    <!-- Complete schema for ConnectConfig can be found in ConnectConfig.xsd 
+	This default configuration is used by Borland integrations.  Additional DataSource and/or SynchronizationMaps can be added
+	to this file, but the default DataSource and SynchronizationMap should not be changed unless done so through a Borland tool.-->
+    <!-- START DEFAULT CONFIGURATIONS -->
+    <!-- ValidateOnly: during configuration, set this to true to insure that no data in any DataSource is alterated.
+		One synchronization cycle will be performed.  The logs will be written as if changes had been made in order
+		to verify intended operation. Optional, default is false -->
+    <ValidateOnly>false</ValidateOnly>
+    <!-- Repeat: time in seconds between synchronizations.  Optional - defaults to 5 seconds -->
+    <Repeat>20</Repeat>
+    <!-- MaxThreads: If multiple DataSources or projects are specified, synchronization is spread out over this many threads.
+    	Each thread has it's own StarTeam Server connection. Optional, defaults to 1 -->
+    <MaxThreads>4</MaxThreads>
+    <!-- DataSource: defines parameters to connect to a repository and the types of data to be synchronized -->
+    <DataSource>
+        <!-- Name: referenced in Synchronization block, must be unique -->
+        <name>HubDefault</name>
+        <!-- Product: used for repository type.  Predefined products: StarTeam, Rally -->
+        <product>StarTeam</product>
+        <!-- connector: defines parameters necessary to create a connection to a repository -->
+        <connector>
+            <!-- connectorClass: DataPool implementation for this repository -->
+            <connectorClass>com.borland.connect.STDataPool</connectorClass>
+            <!-- userName and password for the Admin user to log in with.
+			    password will be placed into an encrypted file the first time Borland Connect runs with a clear password -->
+            <userName>Administrator</userName>
+            <password>+0kyQRwIAWIMhq8WlOVtoKo5WRv449Ndo3H3Ww+v2flW+dHH/jKxngz17ZQD+B/DfthBhTVLPAu7YTuH8P0t44F+8lT08mDQpRyzxr81MCazwWKnlD+OE23zYwkY+7Gz/UsUZwGqGe1WKzWHPpzJOtczJ9M4vP0RNqE0QOJotXcM1DlGLjsew1u3flt6iP9Gn1wZI7QmezdNjsSfrr3kxx6Qfk7M7TmbW1liVuGBvoh8o5P/t16t5sDmsdAx0ldbv0DneM2MgCrstvK4vm76qBkirlu7cLbhXpdQ9PylZuFMsapPHFNnvpCSri97o9360aWW85tWvrVTiTqmkPC4Sw==</password>
+            <!-- Custom parameters referenced by the specific DataPool implementation.
+				Custom parameters for a DataPool or Type should always contain a unique name within a DataSource-->
+            <CustomProperty>
+                <!-- URL: custom StarTeam property for identifying the location of the StarTeam Server.  Required for StarTeam DataSource -->
+                <name>URL</name>
+                <value>starteam://localhost:49201</value>
+            </CustomProperty>
+            <CustomProperty>
+                <!-- ExclusiveLockOnUpdate: boolean custom StarTeam property indicating if ExclusiveLock should be obtained by BorlandConnect prior to update.
+					See DataPool.lock for further information on locking options. Optiona, default is false. -->
+                <name>ExclusiveLockOnUpdate</name>
+                <value>true</value>
+            </CustomProperty>
+        </connector>
+        <!-- Type: defines a type of item in the repository for synchronization. -->
+        <Type>
+            <!-- name: the name of the item type.  For StarTeam, name matches the name of the component, e.g ChangeRequest, Task, Topic, Requirement, Story, Sprint
+			    or the name of a custom component.  If this type is for an SCM Connector, then the name should be 'ChangeSet' -->
+            <name>Story</name>
+            <!-- readOnly: Setting a type as readonly will only allow one-way synchronization regardless of the
+				mapping ownership.  Unlike ValidateOnly, synchronization will continue until Borland Connect is stopped.  Optional, default is false. -->
+            <readOnly>false</readOnly>
+            <!-- createNewItems: restricts synchronization from creating new items of this type.  Optional, default is false -->
+            <createNewItems>true</createNewItems>
+            <!-- deleteItems: restricts synchronization from deleting items of this type.  Optional, default is false -->
+            <deleteItems>true</deleteItems>
+            <!-- parentProperty: defines the property used to identify the parent object.  Required if includeChildren is specified in 
+			    Synchronization/TypeMap. Optional -->
+            <parentProperty>ParentID</parentProperty>
+            <!-- idproperty: defines the property used to hold a unique key for item of the this type.  Required. For StarTeam, default is
+			ViewMemberID, for Rally default is FormattedID (ObjectID for Iterations). -->
+            <idProperty>ViewMemberID</idProperty>
+            <!-- externalURLProperty: optional property name for storing the URL of corresponding item in the other repository -->
+            <externalURLProperty>ExternalURL</externalURLProperty>
+            <!-- modifiedByProperty and modifiedTypeProperty: Properties indicating who and when for changed items.  Required.  For StarTeam, default
+			is ModifiedUserID and ModifiedTime, for Rally default is User and LastUpdateDate -->
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>Sprint</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <idProperty>ViewMemberID</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>Task</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <parentProperty>StTaskParentID</parentProperty>
+            <idProperty>ViewMemberID</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>Concept</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <idProperty>ViewMemberID</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>Whiteboard</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <idProperty>ViewMemberID</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+    </DataSource>
+    <DataSource>
+        <name>RallyDefault</name>
+        <product>Rally</product>
+        <connector>
+            <connectorClass>com.rally.connect.RallyDataPool</connectorClass>
+            <userName/>
+            <password/>
+            <!-- timeOffSet: + or - number of seconds this DataSource repository time is off from the time of the Borland Connect process.
+				timeOffSet DOES NOT need to include a difference in timezones.  Optional, default is 0 -->
+            <CustomProperty>
+                <!-- Workspace: custom Rally property for defining the Rally Workspace where projects are located. Required for Rally DataSource -->
+                <name>Workspace</name>
+                <value/>
+            </CustomProperty>
+            <CustomProperty>
+                <!-- URL: custom Rally property for identifying the location of the Rally Server. Required for Rally DataSource -->
+                <name>URL</name>
+                <value/>
+            </CustomProperty>
+            <timeOffSet/>
+            <CustomProperty>
+                <name>Proxy</name>
+                <value/>
+            </CustomProperty>
+            <CustomProperty>
+                <name>ScopedUp</name>
+                <value/>
+            </CustomProperty>
+            <CustomProperty>
+                <name>ScopedDown</name>
+                <value/>
+            </CustomProperty>
+        </connector>
+        <Type>
+            <name>HierarchicalRequirement</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <parentProperty>Parent</parentProperty>
+            <idProperty>FormattedID</idProperty>
+            <modifiedByProperty>User</modifiedByProperty>
+            <modifiedTimeProperty>LastUpdateDate</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+        <Type>
+            <name>Iteration</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <idProperty>ObjectID</idProperty>
+            <modifiedByProperty>User</modifiedByProperty>
+            <modifiedTimeProperty>LastUpdateDate</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+        <Type>
+            <name>Task</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <idProperty>FormattedID</idProperty>
+            <modifiedByProperty>User</modifiedByProperty>
+            <modifiedTimeProperty>LastUpdateDate</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+    </DataSource>
+    <DataSource>
+        <name>TFSDefault</name>
+        <product>TFS</product>
+        <connector>
+            <connectorClass>com.tfs.connect.TFSDataPool</connectorClass>
+            <userName/>
+            <password/>
+            <CustomProperty>
+                <!-- URL: custom TFS property for identifying the location of the TFS Server. Required for TFS DataSource -->
+                <name>URL</name>
+                <value/>
+            </CustomProperty>
+        </connector>
+        <Type>
+            <name>Iteration</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <parentProperty>Parent</parentProperty>
+            <idProperty>URI</idProperty>
+            <modifiedByProperty>Changed By</modifiedByProperty>
+            <modifiedTimeProperty>Changed Date</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+        <Type>
+            <name>Product Backlog Item</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <parentProperty>Parent</parentProperty>
+            <idProperty>id</idProperty>
+            <modifiedByProperty>Changed By</modifiedByProperty>
+            <modifiedTimeProperty>Changed Date</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+        <Type>
+            <name>Task</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>true</deleteItems>
+            <parentProperty>Parent</parentProperty>
+            <idProperty>id</idProperty>
+            <modifiedByProperty>Changed By</modifiedByProperty>
+            <modifiedTimeProperty>Changed Date</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+    </DataSource>
+    <DataSource>
+        <name>EmailDefault</name>
+        <product>Email</product>
+        <connector>
+            <connectorClass>com.email.connect.EmailDataPool</connectorClass>
+            <!-- username and password should be left blank as actual email addresses and passwords are specified in the ProjectMap -->
+            <userName/>
+            <password/>
+            <CustomProperty>
+                <!-- Required property for Email Connector to specify the Address or IP of the email server -->
+                <name>Address</name>
+                <value/>
+            </CustomProperty>
+            <CustomProperty>
+                <!-- Required property for Email Connector to specify the Port of the email server -->
+                <name>Port</name>
+                <value/>
+            </CustomProperty>
+            <CustomProperty>
+                <!-- Required property for Email Connector to specify imap or pop3 -->
+                <name>StoreType</name>
+                <value/>
+            </CustomProperty>
+            <CustomProperty>
+                <!-- Optional property for Email Connector to specify the folder where all team email addresses will store emails to synchronize -->
+                <name>WatchFolder</name>
+                <value>Inbox</value>
+            </CustomProperty>
+            <timeOffSet/>
+        </connector>
+        <Type>
+            <!-- Default type Email for actual emails to be synchronized -->
+            <name>Email</name>
+            <readOnly>false</readOnly>
+            <createNewItems>false</createNewItems>
+            <deleteItems>false</deleteItems>
+            <idProperty>ID</idProperty>
+            <modifiedByProperty>From</modifiedByProperty>
+            <modifiedTimeProperty>Date</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <!-- Default type Inbox for Folder to be synchronized as a Whiteboard -->
+            <name>Inbox</name>
+            <readOnly>false</readOnly>
+            <createNewItems>false</createNewItems>
+            <deleteItems>false</deleteItems>
+            <idProperty>Name</idProperty>
+            <modifiedByProperty>ModifiedBy</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedOn</modifiedTimeProperty>
+        </Type>
+    </DataSource>
+    <!-- Synchronization: defines a mapping between types in 2 data sources.  Source/target is not an indication of direction of data flow -->
+    <Synchronization>
+        <name>AtlasRally</name>
+        <!-- source and target: name of a defined DataSource -->
+        <source>HubDefault</source>
+        <target>RallyDefault</target>
+        <!-- direction: defines the flow of data.  When specified at the Synchronization, is used as default for all PropertyMaps.
+		    Possible values are "fromSource", "fromTarget" or "both".  Optoinal, default is "both" -->
+        <direction>both</direction>
+        <!-- TypeMap: defines the source and target item types to synchronize and the properties to be synchronized. -->
+        <TypeMap>
+            <!-- source and target: name of the defined Types from the DataSources. -->
+            <source>Story</source>
+            <target>HierarchicalRequirement</target>
+            <!-- includeChildren: if type supports tree structure, then changes to the structure will be synchronized.  Otherwise
+				all items will be created at the root level.  Optoinal, defaults to false. -->
+            <includeChildren>true</includeChildren>
+            <!-- linkMap: the idProperty of the OTHER type will be stored in this property.  Synchronization deletion of items of a given type
+				requires a linkMap be defined in the OTHER type.  The specified property should not be edited on items by users.
+				Both sourceProperty and targetProperty can be specified and at least one if required. -->
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <!-- PropertyMap: defines a mapping for 2 properties in the given TypeMap -->
+            <PropertyMap>
+                <!-- sourceProperty: the property name in the source type - targetProperty is the property name in the target type -->
+                <sourceProperty>StoryStatus</sourceProperty>
+                <targetProperty>ScheduleState</targetProperty>
+                <!-- direction: specifies the flow of data for this property mapping.
+				    Possible values are "fromSource", "fromTarget" or "both".  Optoinal, default is "both" -->
+                <direction>both</direction>
+                <!-- ValueMap: lists associated source/target pairs of values to match for the property. If a value map is used on
+				     a hierarchical enumeration, the the path nodes are separated with ";"  Optional -->
+                <ValueMap>
+                    <sourceValue>Accepted</sourceValue>
+                    <targetValue>Accepted</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Not Started</sourceValue>
+                    <targetValue>Defined</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Completed</sourceValue>
+                    <targetValue>Completed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Started</sourceValue>
+                    <targetValue>In-Progress</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>Name</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Sponsor</sourceProperty>
+                <targetProperty>Owner</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>EstimatedPoints</sourceProperty>
+                <targetProperty>PlanEstimate</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Rank</sourceProperty>
+                <targetProperty>Rank</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>TargetReleases</sourceProperty>
+                <targetProperty>Release</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>Sprint</source>
+            <target>Iteration</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>Name</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StartDate</sourceProperty>
+                <targetProperty>StartDate</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>EndDate</sourceProperty>
+                <targetProperty>EndDate</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Comment</sourceProperty>
+                <targetProperty>State</targetProperty>
+                <ValueMap>
+                    <sourceValue/>
+                    <targetValue>Planning</targetValue>
+                </ValueMap>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>Task</source>
+            <target>Task</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>StTaskName</sourceProperty>
+                <targetProperty>Name</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>HoursWorked</sourceProperty>
+                <targetProperty>Actuals</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>HoursRemaining</sourceProperty>
+                <targetProperty>ToDo</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskEstimatedHours</sourceProperty>
+                <targetProperty>Estimate</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskStatus</sourceProperty>
+                <targetProperty>State</targetProperty>
+                <ValueMap>
+                    <sourceValue>Pending</sourceValue>
+                    <targetValue>Defined</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>In Progress</sourceValue>
+                    <targetValue>In-Progress</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Finished</sourceValue>
+                    <targetValue>Completed</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskBlocked</sourceProperty>
+                <targetProperty>Blocked</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskResponsibility</sourceProperty>
+                <targetProperty>Owner</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <!-- RelationshipMap: defines when a property of an item is used to store a reference to an item of another type.  In StarTeam,
+			these relationships are persisted by creating a trace with the specified traceType between 2 types of items. -->
+        <RelationshipMap>
+            <!-- relationshipSource: defines the property in the non-StarTeam repository which contains a reference to another type -->
+            <relationshipSource>
+                <type>Task</type>
+                <!-- property: the property in this type that contains the relationship reference. -->
+                <property>WorkProduct</property>
+            </relationshipSource>
+            <!-- relationshipTarget: when the property has an item of the specified type, the relationship is stored in StarTeam using
+				the specified traceType ( e.g. execution, manual, etc ).  More than 1 relationshipTarget can be specified. For example,
+				in Rally, a WorkProduct could point to a HierarchicalRequirement OR a Defect. -->
+            <relationshipTarget>
+                <!-- type: defines the type of item to synchronize from the relationshipSource property.  Other types found as values will be 
+					ignored unless they are also defined as relationshipTargets. -->
+                <type>HierarchicalRequirement</type>
+                <!-- traceType: the Trace type name to create in StarTeam for this type of relationship. -->
+                <traceType>Execution</traceType>
+            </relationshipTarget>
+        </RelationshipMap>
+        <RelationshipMap>
+            <relationshipSource>
+                <type>HierarchicalRequirement</type>
+                <property>Iteration</property>
+            </relationshipSource>
+            <relationshipTarget>
+                <type>Iteration</type>
+                <traceType>Undefined</traceType>
+            </relationshipTarget>
+        </RelationshipMap>
+        <!-- ProjectMap: defines the source/target project names that will be synchronized together.  1 to many Project Maps can be specified for this Synchronization. -->
+        <enabled>true</enabled>
+    </Synchronization>
+    <!-- define the parameters used to connect to AccuRev and the types of data to synchronize  -->
+    <DataSource>
+        <name>ACCUREV</name>
+        <product>AccuRev</product>
+        <connector>
+            <connectorClass>com.accurev.connect.AccuWorkDataPool</connectorClass>
+            <userName>admin</userName>
+            <password>iOyhQ9IrhJD1AyoHvnJUZPOhWRGDs1b+vthsBPMlVZuqGAomuQNpneurRPB14Wgav9ATWvzrj3B76QzIolnt/zXR5zrpRWoCFBbsFBVGHQVaujHhErUh52K956BQjyI1N4K9/9h0qNAvfhmaOnPkudqmItZ5oDeitRJRvTG+1z865Kr09yFcAm/W/x8mxcUNhiEv744DQurChy51kFlvIrAi7OOdZ8wtECS/xIIvkUQGiEEg/nD1cpr4dP3qAq6LsXs4vs/GcViQlQKsB0n0W/IheDIctJHdRdzPitIMUFPSB/HUGpNky43KchZDRkxCUCETCN2zfxC7RIiFAeR7wg==</password>
+            <CustomProperty>
+                <name>URL</name>
+                <value>http://localhost:8080/accurev/</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Depot</name>
+                <value>ConnectorDepot</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Server</name>
+                <value>localhost</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Port</name>
+                <value>5050</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Project Field</name>
+                <value>project</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Type Field</name>
+                <value>type</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Status Field</name>
+                <value>status</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Release Field</name>
+                <value>targetRelease</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Iteration Field</name>
+                <value>targetIteration</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>Apply Value from Parent</name>
+                <value>task:targetRelease</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>On Delete Status</name>
+                <value>status:Closed</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>On Delete State</name>
+                <value>state:Cancelled</value>
+            </CustomProperty>
+        </connector>
+        <Type>
+            <name>Iteration</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>false</deleteItems>
+            <idProperty>Name</idProperty>
+        </Type>
+        <Type>
+            <name>UserStory</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>false</deleteItems>
+            <idProperty>issueNum</idProperty>
+            <parentProperty>internal_Parent</parentProperty>
+            <modifiedByProperty>internal_modifiedUser</modifiedByProperty>
+            <modifiedTimeProperty>internal_modifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>Task</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>false</deleteItems>
+            <idProperty>issueNum</idProperty>
+            <modifiedByProperty>internal_modifiedUser</modifiedByProperty>
+            <modifiedTimeProperty>internal_modifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>Defect</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <deleteItems>false</deleteItems>
+            <idProperty>issueNum</idProperty>
+            <parentProperty>internal_Parent</parentProperty>
+            <modifiedByProperty>internal_modifiedUser</modifiedByProperty>
+            <modifiedTimeProperty>internal_modifiedTime</modifiedTimeProperty>
+            <changeSetType>false</changeSetType>
+        </Type>
+    </DataSource>
+    <Synchronization>
+        <name>AccuRevSync</name>
+        <!-- source and target: name of a defined DataSource -->
+        <source>ST</source>
+        <target>ACCUREV</target>
+        <!-- sync direction: both, fromSource, fromTarget -->
+        <direction>both</direction>
+        <TypeMap>
+            <source>Sprint</source>
+            <target>Iteration</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <SyncCriteria>
+                <targetName>targetRelease</targetName>
+                <targetValue>Release1</targetValue>
+            </SyncCriteria>
+            <SyncCriteriaOperator>
+                <source>AND</source>
+                <target>AND</target>
+            </SyncCriteriaOperator>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>Name</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>TargetReleases</sourceProperty>
+                <targetProperty>targetRelease</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>Story</source>
+            <target>UserStory</target>
+            <includeChildren>true</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+                <targetProperty>starTeamKey</targetProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>shortDescription</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Usr_AccuworkKey</sourceProperty>
+                <targetProperty>accuworkLink</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>CreatedUserID</sourceProperty>
+                <targetProperty>submittedBy</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>EstimatedPoints</sourceProperty>
+                <targetProperty>poPoints</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Tag</sourceProperty>
+                <targetProperty>tag</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Sponsor</sourceProperty>
+                <targetProperty>assignedTo</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>TargetReleases</sourceProperty>
+                <targetProperty>targetRelease</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>Task</source>
+            <target>Task</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>Usr_AccuworkIssueKey</sourceProperty>
+                <targetProperty>starTeamKey</targetProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>StTaskName</sourceProperty>
+                <targetProperty>shortDescription</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Usr_AccuworkKey</sourceProperty>
+                <targetProperty>accuworkLink</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>CreatedUserID</sourceProperty>
+                <targetProperty>submittedBy</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskEstimatedHours</sourceProperty>
+                <targetProperty>devEestTime</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskEstimatedHours</sourceProperty>
+                <targetProperty>remainTime</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>ChangeRequest</source>
+            <target>Defect</target>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+                <targetProperty>starTeamKey</targetProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Usr_AccuworkKey</sourceProperty>
+                <targetProperty>accuworkLink</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Synopsis</sourceProperty>
+                <targetProperty>shortDescription</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Description</sourceProperty>
+                <targetProperty>description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>CreatedUserID</sourceProperty>
+                <targetProperty>submittedBy</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <!-- RelationshipMap: defines when a property of an item is used to store a reference to an item of another type. In StarTeam,
+			these relationships are persisted by creating a trace with the specified traceType between two types of items. -->
+        <RelationshipMap>
+            <!-- relationshipSource: defines the property in the non-StarTeam repository which contains a reference to another type -->
+            <relationshipSource>
+                <type>Task</type>
+                <!-- property: the property in this type that contains the relationship reference. -->
+                <property>internal_Parent</property>
+            </relationshipSource>
+            <!-- relationshipTarget: when the property has an item of the specified type, the relationship is stored in StarTeam using
+                                     the specified traceType (e.g. execution, manual, etc.). More than one relationshipTarget can be specified. For example, in AccuWork, an Issue could point to a UserStory OR a ChangeRequest. -->
+            <relationshipTarget>
+                <!-- type: defines the type of item to synchronize from the relationshipSource property. Other types found as values will be ignored unless they are also defined as relationshipTarget. -->
+                <type>UserStory</type>
+                <!-- traceType: the Trace type name to create in StarTeam for this type of relationship. -->
+                <traceType>Execution</traceType>
+            </relationshipTarget>
+        </RelationshipMap>
+        <ProjectMap>
+            <!-- source and target: the name of the Project in each DataSource. -->
+            <source>TestProject</source>
+            <target>Project1</target>
+        </ProjectMap>
+        <SmtpToAddressList/>
+        <EmailFrequency/>
+    </Synchronization>
+    <Synchronization>
+        <name>AtlasTFS</name>
+        <!-- source and target: name of a defined DataSource -->
+        <source>HubDefault</source>
+        <target>TFSDefault</target>
+        <!-- direction: defines the flow of data.  When specified at the Synchronization, is used as default for all PropertyMaps.
+		    Possible values are "fromSource", "fromTarget" or "both".  Optoinal, default is "both" -->
+        <direction>both</direction>
+        <!-- TypeMap: defines the source and target item types to synchronize and the properties to be synchronized. -->
+        <TypeMap>
+            <!-- source and target: name of the defined Types from the DataSources. -->
+            <source>Sprint</source>
+            <target>Iteration</target>
+            <!-- includeChildren: if type supports tree structure, then changes to the structure will be synchronized.  Otherwise
+				all items will be created at the root level.  Optoinal, defaults to false. -->
+            <includeChildren>false</includeChildren>
+            <!-- linkMap: the idProperty of the OTHER type will be stored in this property.  Synchronization deletion of items of a given type
+				requires a linkMap be defined in the OTHER type.  The specified property should not be edited on items by users.
+				Both sourceProperty and targetProperty can be specified and at least one if required. -->
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <!-- PropertyMap: defines a mapping for 2 properties in the given TypeMap -->
+            <PropertyMap>
+                <!-- sourceProperty: the property name in the source type - targetProperty is the property name in the target type -->
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>IterationName</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StartDate</sourceProperty>
+                <targetProperty>StartDate</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>EndDate</sourceProperty>
+                <targetProperty>FinishDate</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>Story</source>
+            <target>Product Backlog Item</target>
+            <includeChildren>true</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>Title</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StoryStatus</sourceProperty>
+                <targetProperty>State</targetProperty>
+                <ValueMap>
+                    <sourceValue>Not Started</sourceValue>
+                    <targetValue>New</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Completed</sourceValue>
+                    <targetValue>Done</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Started</sourceValue>
+                    <targetValue>Approved</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Sponsor</sourceProperty>
+                <targetProperty>Assigned To</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>EstimatedPoints</sourceProperty>
+                <targetProperty>Effort</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <!-- RelationshipMap: defines when a property of an item is used to store a reference to an item of another type.  In StarTeam,
+			these relationships are persisted by creating a trace with the specified traceType between 2 types of items. -->
+        <RelationshipMap>
+            <!-- relationshipSource: defines the property in the non-StarTeam repository which contains a reference to another type -->
+            <relationshipSource>
+                <type>Product Backlog Item</type>
+                <!-- property: the property in this type that contains the relationship reference. -->
+                <property>Iteration Path</property>
+            </relationshipSource>
+            <!-- relationshipTarget: when the property has an item of the specified type, the relationship is stored in StarTeam using
+				the specified traceType ( e.g. execution, manual, etc ).  More than 1 relationshipTarget can be specified. -->
+            <relationshipTarget>
+                <!-- type: defines the type of item to synchronize from the relationshipSource property.  Other types found as values will be 
+					ignored unless they are also defined as relationshipTargets. -->
+                <type>Iteration</type>
+                <!-- traceType: the Trace type name to create in StarTeam for this type of relationship. -->
+                <traceType>Undefined</traceType>
+            </relationshipTarget>
+        </RelationshipMap>
+        <TypeMap>
+            <source>Task</source>
+            <target>Task</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>StTaskName</sourceProperty>
+                <targetProperty>Title</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskStatus</sourceProperty>
+                <targetProperty>State</targetProperty>
+                <ValueMap>
+                    <sourceValue>Finished</sourceValue>
+                    <targetValue>Done</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Hold</sourceValue>
+                    <targetValue>Removed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>In Progress</sourceValue>
+                    <targetValue>In Progress</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Pending</sourceValue>
+                    <targetValue>To Do</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskResponsibility</sourceProperty>
+                <targetProperty>Assigned To</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskBlocked</sourceProperty>
+                <targetProperty>Blocked</targetProperty>
+                <ValueMap>
+                    <sourceValue>False</sourceValue>
+                    <targetValue/>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>True</sourceValue>
+                    <targetValue>Yes</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>HoursRemaining</sourceProperty>
+                <targetProperty>Remaining Work</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <RelationshipMap>
+            <relationshipSource>
+                <type>Task</type>
+                <property>Related</property>
+            </relationshipSource>
+            <relationshipTarget>
+                <type>Product Backlog Item</type>
+                <traceType>Execution</traceType>
+            </relationshipTarget>
+        </RelationshipMap>
+        <!-- ProjectMap: defines the source/target project names that will be synchronized together.  1 to many Project Maps can be specified for this Synchronization. -->
+    </Synchronization>
+    <Synchronization>
+        <name>AtlasEmail</name>
+        <source>HubDefault</source>
+        <target>EmailDefault</target>
+        <TypeMap>
+            <source>Concept</source>
+            <target>Email</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>Subject</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Content</sourceProperty>
+                <targetProperty>Attachments</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <TypeMap>
+            <source>Whiteboard</source>
+            <target>Inbox</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>ExternalID</sourceProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>Name</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <RelationshipMap>
+            <relationshipSource>
+                <type>Email</type>
+                <property>Whiteboard</property>
+            </relationshipSource>
+            <relationshipTarget>
+                <type>Inbox</type>
+                <traceType>Whiteboard</traceType>
+            </relationshipTarget>
+        </RelationshipMap>
+        <!-- ProjectMap syntax for Email Connector is "address:password".  Example - john@foo.com:foopass -->
+    </Synchronization>
+    <DataSource>
+        <name>Excel</name>
+        <product>Excel</product>
+        <connector>
+            <connectorClass>com.excel.connect.ExcelDataPool</connectorClass>
+            <!-- define the parameters used to connect to Excel and the types of data to synchronize  -->
+            <CustomProperty>
+                <name>excelSheetPath</name>
+                <value>E:/Raghuveer/Test</value>
+            </CustomProperty>
+            <CustomProperty>
+                <name>fileExtension</name>
+                <value>xlsm</value>
+            </CustomProperty>
+        </connector>
+        <Type>
+            <name>Tasks</name>
+            <isChangeSetType>false</isChangeSetType>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <parentProperty>ParentID</parentProperty>
+            <deleteItems>false</deleteItems>
+            <idProperty>id</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+        <Type>
+            <name>ChangeRequest</name>
+            <isChangeSetType>false</isChangeSetType>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <parentProperty>ParentID</parentProperty>
+            <deleteItems>false</deleteItems>
+            <idProperty>id</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+            <!-- <changeSetType>false</changeSetType>-->
+        </Type>
+        <Type>
+            <name>Requirement</name>
+            <readOnly>false</readOnly>
+            <createNewItems>true</createNewItems>
+            <parentProperty>ParentID</parentProperty>
+            <deleteItems>false</deleteItems>
+            <idProperty>id</idProperty>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+        </Type>
+    </DataSource>
+    <Synchronization>
+        <name>excelSync</name>
+        <!-- source and target: name of a defined DataSource -->
+        <source>ST</source>
+        <target>Excel</target>
+        <!-- both, fromSource, fromTarget -->
+        <direction>both</direction>
+        <!--Task TypeMap -->
+        <TypeMap>
+            <source>Task</source>
+            <target>Tasks</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>Usr_ExcelIssueKey</sourceProperty>
+                <targetProperty>StarteamKey</targetProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>StTaskName</sourceProperty>
+                <targetProperty>ShortDescription</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>RichDescription</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskResponsibility</sourceProperty>
+                <targetProperty>Owner</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Usr_ExcelIssueLink</sourceProperty>
+                <targetProperty>StarteamIssueLink</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>ModifiedTime</sourceProperty>
+                <targetProperty>Modified</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>STTaskStatus</sourceProperty>
+                <targetProperty>Status</targetProperty>
+                <ValueMap>
+                    <sourceValue>Pending</sourceValue>
+                    <targetValue>Pending</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Ready To Start</sourceValue>
+                    <targetValue>Ready To Start</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>In Progress</sourceValue>
+                    <targetValue>In Progress</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Finished</sourceValue>
+                    <targetValue>Completed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Closed</sourceValue>
+                    <targetValue>Closed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Hold</sourceValue>
+                    <targetValue>Hold</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>StTaskPriority</sourceProperty>
+                <targetProperty>Priority</targetProperty>
+                <ValueMap>
+                    <sourceValue>Do Not Level</sourceValue>
+                    <targetValue>Do Not Level</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>High</sourceValue>
+                    <targetValue>High</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Higher</sourceValue>
+                    <targetValue>Higher</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Highest</sourceValue>
+                    <targetValue>Highest</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Low</sourceValue>
+                    <targetValue>Low</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Lower</sourceValue>
+                    <targetValue>Lower</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Lowest</sourceValue>
+                    <targetValue>Lowest</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Medium</sourceValue>
+                    <targetValue>Medium</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Very High</sourceValue>
+                    <targetValue>Very High</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Very Low</sourceValue>
+                    <targetValue>Very Low</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <!--<PropertyMap><sourceProperty>Notes</sourceProperty><targetProperty>Notes</targetProperty></PropertyMap>-->
+            <PropertyMap>
+                <sourceProperty>Comment</sourceProperty>
+                <targetProperty>Comment</targetProperty>
+            </PropertyMap>
+            <!--			<PropertyMap><sourceProperty>ParentID</sourceProperty><targetProperty>ParentID</targetProperty></PropertyMap>-->
+        </TypeMap>
+        <!--ChangeRequest TypeMap -->
+        <TypeMap>
+            <source>ChangeRequest</source>
+            <target>ChangeRequest</target>
+            <includeChildren>false</includeChildren>
+            <linkMap>
+                <sourceProperty>Usr_ExcelIssueKey</sourceProperty>
+                <targetProperty>StarteamKey</targetProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Synopsis</sourceProperty>
+                <targetProperty>ShortDescription</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Description</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Responsibility</sourceProperty>
+                <targetProperty>Owner</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Comment</sourceProperty>
+                <targetProperty>Comment</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Severity</sourceProperty>
+                <targetProperty>Severity</targetProperty>
+                <ValueMap>
+                    <sourceValue>Low</sourceValue>
+                    <targetValue>1-Low</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Medium</sourceValue>
+                    <targetValue>2-Medium</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>High</sourceValue>
+                    <targetValue>3-High</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Status</sourceProperty>
+                <targetProperty>Status</targetProperty>
+                <ValueMap>
+                    <sourceValue>New</sourceValue>
+                    <targetValue>New</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Open</sourceValue>
+                    <targetValue>Open</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Fixed</sourceValue>
+                    <targetValue>Fixed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Cannot Reproduce</sourceValue>
+                    <targetValue>Cannot Reproduce</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Usr_ExcelIssueLink</sourceProperty>
+                <targetProperty>StarteamIssueLink</targetProperty>
+            </PropertyMap>
+        </TypeMap>
+        <!--Requirement TypeMap -->
+        <TypeMap>
+            <source>Requirement</source>
+            <target>Requirement</target>
+            <includeChildren>true</includeChildren>
+            <linkMap>
+                <sourceProperty>Usr_ExcelIssueKey</sourceProperty>
+                <targetProperty>StarteamKey</targetProperty>
+            </linkMap>
+            <PropertyMap>
+                <sourceProperty>Name</sourceProperty>
+                <targetProperty>ShortDescription</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Comment</sourceProperty>
+                <targetProperty>Comment</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Owner</sourceProperty>
+                <targetProperty>Owner</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Description</sourceProperty>
+                <targetProperty>Description</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Usr_ExcelIssueLink</sourceProperty>
+                <targetProperty>StarteamIssueLink</targetProperty>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Status</sourceProperty>
+                <targetProperty>Status</targetProperty>
+                <ValueMap>
+                    <sourceValue>Submitted</sourceValue>
+                    <targetValue>Submitted</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Rejected</sourceValue>
+                    <targetValue>Failed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Accepted</sourceValue>
+                    <targetValue>Passed</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Draft</sourceValue>
+                    <targetValue>N/A</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Priority</sourceProperty>
+                <targetProperty>Priority</targetProperty>
+                <ValueMap>
+                    <sourceValue>Desirable</sourceValue>
+                    <targetValue>Desirable</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Essential</sourceValue>
+                    <targetValue>Essential</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Unassigned</sourceValue>
+                    <targetValue>Unassigned</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Useful</sourceValue>
+                    <targetValue>Useful</targetValue>
+                </ValueMap>
+            </PropertyMap>
+            <PropertyMap>
+                <sourceProperty>Type</sourceProperty>
+                <targetProperty>Type</targetProperty>
+                <ValueMap>
+                    <sourceValue>Business Requirement</sourceValue>
+                    <targetValue>BR</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Business Specification</sourceValue>
+                    <targetValue>BS</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Hardware Requirement</sourceValue>
+                    <targetValue>HR</targetValue>
+                </ValueMap>
+                <ValueMap>
+                    <sourceValue>Hardware Specification</sourceValue>
+                    <targetValue>HS</targetValue>
+                </ValueMap>
+            </PropertyMap>
+        </TypeMap>
+        <ProjectMap>
+            <!--  source & target: the name of the Project in each DataSource.  -->
+            <source>ExcelConn</source>
+            <target>template</target>
+        </ProjectMap>
+    </Synchronization>
+    <!-- END DEFAULT CONFIGURATIONS -->
+    <SmtpHost/>
+    <SmtpPort/>
+    <SmtpUser/>
+    <SmtpPass/>
+    <SmtpFromAddress/>
+    <SmtpToAddressList/>
+    <SystemEmailFrequency/>
+    <DataSource>
+        <name>4tvvv</name>
+        <product>StarTeam</product>
+        <connector>
+            <userName/>
+            <password/>
+            <timeOffSet/>
+            <CustomProperty>
+                <name>URL</name>
+                <value/>
+            </CustomProperty>
+        </connector>
+        <Type>
+            <name>Topic</name>
+            <modifiedTimeProperty>ModifiedTime</modifiedTimeProperty>
+            <includeChildren>true</includeChildren>
+            <deleteItems>true</deleteItems>
+            <modifiedByProperty>ModifiedUserID</modifiedByProperty>
+            <externalURLProperty>ExternalURL</externalURLProperty>
+            <parentProperty>ParentTopicID</parentProperty>
+            <createNewItems>true</createNewItems>
+            <readOnly>false</readOnly>
+            <idProperty>ViewMemberID</idProperty>
+        </Type>
+    </DataSource>
+    <Synchronization>
+        <source>HubDefault</source>
+        <target/>
+        <direction>fromSource</direction>
+        <name>Test</name>
+        <SmtpToAddressList/>
+        <EmailFrequency/>
+        <enabled>false</enabled>
+    </Synchronization>
+</ConnectConfig>
+<!-- test -->
